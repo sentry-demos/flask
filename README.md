@@ -11,6 +11,7 @@ Releases/Commits
 
 ```
 flask run -h localhost -p 3001
+flask run -p 3001
 ```
 
 # GIF

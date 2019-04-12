@@ -1,4 +1,4 @@
-from flask import Flask, request, g
+from flask import Flask, request, g, json
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -10,56 +10,55 @@ sentry_sdk.init(
 
 app = Flask(__name__)
 
-# request.form .args .files .method
 
-# 1 POST request to /checkout
-# 2 variablize the request's body
-# 3 variablize the request's header X-Transaction-Id
-# 4 review demo spec in notion
-# 5 working endpoint, return response
-# 6 introduce broken code to trigger...
-# 7 graceful error handling
-# 6 return response
+# review demo spec in notion
+    # set Inventory as 'extra' info on Sentry Event scope
+# working endpoint, return response
+# introduce broken code to trigger...
+# graceful error handling
+# return response
 
-# global Inventory
+
 Inventory = {
     'wrench': 0,
     'nails': 0,
     'hammer': 1
 }
 
-# {cart: [{ id: 'nails' }, ...], email: '...@yahoo.com'}
-# param = request.args.get('name')
+
 @app.route('/checkout', methods=['POST'])
 def checkout():
     
     # POST BODY
-    req_data = request.get_json()
-    
-    # MODULARIZE THIS...
-    email = req_data['email']
-    
+    dictionary = json.loads(request.data)
+
+    # MODULARIZE THIS...MIDDLEWARE for other endpoints
+    email = dictionary['email']
+    # set as user...
+    transactionId = request.headers.get('X-Transaction-ID')
+    print transactionId # does not print anything...?
+    # set as Tag...
+
     # CHECKOUT
-    cart = req_data['cart']
+    cart = dictionary['cart']
+    print cart # [{u'id': u'nails'}]...?
     global Inventory
     tempInventory = Inventory
     for item in cart:
-        print Inventory[item.id]
         if Inventory[item.id] <= 0:
+            # set Inventory as the 'extra'
             raise Exception("Not enough inventory for ")
         else:
             tempInventory-= 1
     Inventory = tempInventory 
 
-    # RESPONSE
     return 'Success'
 
 
-#GET requests
+
 @app.route('/handled', methods=['GET'])
 def handled_exception():
     return 'Success'
-
 
 @app.route('/unhandled', methods=['GET'])
 def unhandled_exception():
@@ -72,12 +71,3 @@ def warn():
 @app.route('/error', methods=['GET'])
 def error():
     return 'Success'
-
-# RIGHT BEFORE ERROR...
-# in the Event that gets sent? so before throwing error, update the Extra..
-# - set Inventory as **extra information** / additional data
-
-# MIDDLEWARE
-# let transactionId = request.header('X-Transaction-ID');
-# transaction-id` as tag
-# email as user
