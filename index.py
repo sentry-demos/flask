@@ -21,35 +21,41 @@ app = Flask(__name__)
 
 Inventory = {
     'wrench': 0,
-    'nails': 0,
+    'nails': 1,
     'hammer': 1
 }
 
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
+    # import pdb; pdb.set_trace()
     
     # POST BODY
-    dictionary = json.loads(request.data)
+    dictionary = json.loads(request.data) # json.dumps, request.get_json
+    # dictionary = json.dumps(json.loads(request.data))
+    # dictionary = request.get_json
+
+
+    print dictionary
 
     # MODULARIZE THIS...MIDDLEWARE for other endpoints
-    email = dictionary['email']
-    # set as user...
-    transactionId = request.headers.get('X-Transaction-ID')
-    print transactionId # does not print anything...?
-    # set as Tag...
+    email = dictionary["email"]
+    # set User...
+    # transactionId = request.headers.get('X-Transaction-ID')
+    # print transactionId
+    # set Tag...
 
     # CHECKOUT
-    cart = dictionary['cart']
+    cart = dictionary["cart"]
     print cart # [{u'id': u'nails'}]...?
     global Inventory
     tempInventory = Inventory
     for item in cart:
-        if Inventory[item.id] <= 0:
-            # set Inventory as the 'extra'
+        if Inventory[item['id']] <= 0:
+            # set the Extra...
             raise Exception("Not enough inventory for ")
         else:
-            tempInventory-= 1
+            tempInventory -= 1
     Inventory = tempInventory 
 
     return 'Success'

@@ -8,9 +8,11 @@ Configuration
 Releases/Commits
 
 # First-time Setup
-
+1. place the DSN key in index.py
+2.
 ```
-flask run -h localhost -p 3001
+pip install flask
+pip install sentry_sdk
 flask run -p 3001
 ```
 
