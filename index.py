@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, g
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -21,6 +21,7 @@ app = Flask(__name__)
 # 7 graceful error handling
 # 6 return response
 
+# global Inventory
 Inventory = {
     'wrench': 0,
     'nails': 0,
@@ -40,12 +41,14 @@ def checkout():
     
     # CHECKOUT
     cart = req_data['cart']
+    global Inventory
     tempInventory = Inventory
     for item in cart:
+        print Inventory[item.id]
         if Inventory[item.id] <= 0:
-
+            raise Exception("Not enough inventory for ")
         else:
-            tempInventory--
+            tempInventory-= 1
     Inventory = tempInventory 
 
     # RESPONSE

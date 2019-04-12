@@ -9,4 +9,8 @@ Releases/Commits
 
 # First-time Setup
 
+```
+flask run -h localhost -p 3001
+```
+
 # GIF
