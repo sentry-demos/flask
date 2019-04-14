@@ -25,15 +25,12 @@ Inventory = {
     'hammer': 1
 }
 
-
+# import pdb; pdb.set_trace()
 @app.route('/checkout', methods=['POST'])
 def checkout():
-    # import pdb; pdb.set_trace()
     
     # POST BODY
-    dictionary = json.loads(request.data) # json.dumps, request.get_json
-    # dictionary = json.dumps(json.loads(request.data))
-    # dictionary = request.get_json
+    dictionary = json.loads(request.data)
 
 
     print dictionary
@@ -44,18 +41,19 @@ def checkout():
     # transactionId = request.headers.get('X-Transaction-ID')
     # print transactionId
     # set Tag...
+    # set the Extra...
+
 
     # CHECKOUT
     cart = dictionary["cart"]
-    print cart # [{u'id': u'nails'}]...?
+    print cart
     global Inventory
     tempInventory = Inventory
     for item in cart:
         if Inventory[item['id']] <= 0:
-            # set the Extra...
             raise Exception("Not enough inventory for ")
         else:
-            tempInventory -= 1
+            tempInventory[item['id']] -= 1
     Inventory = tempInventory 
 
     return 'Success'
