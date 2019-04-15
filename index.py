@@ -37,11 +37,15 @@ def checkout():
 
     # MODULARIZE THIS...MIDDLEWARE for other endpoints
     email = dictionary["email"]
-    # set User...
-    # transactionId = request.headers.get('X-Transaction-ID')
-    # print transactionId
-    # set Tag...
-    # set the Extra...
+    transactionId = request.headers.get('X-Transaction-ID')
+    # set user
+    # set transactionId
+
+    print email
+    print transactionId
+
+    # SET TAGS...
+    # SET EXTRAS...
 
 
     # CHECKOUT
@@ -51,12 +55,16 @@ def checkout():
     tempInventory = Inventory
     for item in cart:
         if Inventory[item['id']] <= 0:
-            raise Exception("Not enough inventory for ")
+            raise Exception("Not enough inventory for " + item['id'])
         else:
+            print Inventory[item['id']]    
             tempInventory[item['id']] -= 1
+            response = 'Success purchased ' #+ item['id'] + ' with remaining stock ' + tempInventory[item['id']]
+    
     Inventory = tempInventory 
 
-    return 'Success'
+    print response
+    return response
 
 
 
