@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 
 Inventory = {
-    'wrench': 0,
+    'wrench': 1,
     'nails': 1,
     'hammer': 1
 }
@@ -38,16 +38,21 @@ def checkout():
     # MODULARIZE THIS...MIDDLEWARE for other endpoints
     email = dictionary["email"]
     transactionId = request.headers.get('X-Transaction-ID')
-    # set user
-    # set transactionId
-
     print email
     print transactionId
 
+
+    # TODO
+    # set user
+    # set transactionId
+
+
+    # TODO
     # SET TAGS...
     # SET EXTRAS...
 
 
+    # TODO equivalent of try-catch block so can return 500 response detail
     # CHECKOUT
     cart = dictionary["cart"]
     print cart
@@ -59,11 +64,10 @@ def checkout():
         else:
             print Inventory[item['id']]    
             tempInventory[item['id']] -= 1
-            response = 'Success purchased ' #+ item['id'] + ' with remaining stock ' + tempInventory[item['id']]
+            response = 'Success purchased ' + item['id'] + ' the updated remaining stock is ' + str(tempInventory[item['id']])
     
     Inventory = tempInventory 
 
-    print response
     return response
 
 
