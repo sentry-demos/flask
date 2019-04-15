@@ -13,6 +13,7 @@ Releases/Commits
 ```
 pip install flask
 pip install sentry_sdk
+pip install -U flask-cors
 flask run -p 3001
 ```
 

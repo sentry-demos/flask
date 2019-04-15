@@ -1,5 +1,5 @@
 from flask import Flask, request, g, json
-
+from flask_cors import CORS
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
     
@@ -9,15 +9,10 @@ sentry_sdk.init(
 )
 
 app = Flask(__name__)
+CORS(app)
 
-
+# TODO #
 # review demo spec in notion
-    # set Inventory as 'extra' info on Sentry Event scope
-# working endpoint, return response
-# introduce broken code to trigger...
-# graceful error handling
-# return response
-
 
 Inventory = {
     'wrench': 1,
@@ -33,36 +28,28 @@ def checkout():
     dictionary = json.loads(request.data)
 
 
-    print dictionary
-
     # MODULARIZE THIS...MIDDLEWARE for other endpoints
     email = dictionary["email"]
     transactionId = request.headers.get('X-Transaction-ID')
-    print email
-    print transactionId
+    sessionId = request.headers.get('X-Session-ID')
 
 
     # TODO
     # set user
     # set transactionId
+    # set sessionId
+    # set EXTRAS...
 
 
-    # TODO
-    # SET TAGS...
-    # SET EXTRAS...
-
-
-    # TODO equivalent of try-catch block so can return 500 response detail
+    # TODO equivalent of try-catch block so can return 500 response detail - graceful error handling
     # CHECKOUT
     cart = dictionary["cart"]
-    print cart
     global Inventory
     tempInventory = Inventory
     for item in cart:
         if Inventory[item['id']] <= 0:
             raise Exception("Not enough inventory for " + item['id'])
         else:
-            print Inventory[item['id']]    
             tempInventory[item['id']] -= 1
             response = 'Success purchased ' + item['id'] + ' the updated remaining stock is ' + str(tempInventory[item['id']])
     
