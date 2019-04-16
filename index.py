@@ -8,12 +8,8 @@ sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
     integrations=[FlaskIntegration()]
 )
-
 app = Flask(__name__)
 CORS(app)
-
-# TODO #
-# review demo spec in notion
 
 Inventory = {
     'wrench': 1,
@@ -27,22 +23,19 @@ Inventory = {
 @app.route('/checkout', methods=['POST'])
 def checkout():
     
-    # POST BODY
+    # body
     dictionary = json.loads(request.data)
 
-
-    # MODULARIZE THIS...MIDDLEWARE for other endpoints
+    # make this modular/middleware
     email = dictionary["email"]
     transactionId = request.headers.get('X-Transaction-ID')
     sessionId = request.headers.get('X-Session-ID')
-
-
     with configure_scope() as scope:
         scope.user = { "email" : email }
         scope.set_tag("transaction-id", transactionId)
         scope.set_tag("session-id", sessionId)
 
-    # CHECKOUT
+    # checkout
     cart = dictionary["cart"]
     global Inventory
     tempInventory = Inventory
@@ -63,16 +56,23 @@ def checkout():
 
 @app.route('/handled', methods=['GET'])
 def handled_exception():
+    try:
+        #thing
+    except TheError:
+        
     return 'Success'
 
 @app.route('/unhandled', methods=['GET'])
 def unhandled_exception():
-    return 'Success'
+    obj = {}
+    obj['keyDoesntExist']
 
+# LOG_WARNING ?
 @app.route('/warn', methods=['GET'])
 def warn():
     return 'Success'
 
+# LOG_ERROR ?
 @app.route('/error', methods=['GET'])
 def error():
     return 'Success'
