@@ -69,16 +69,16 @@ def unhandled_exception():
     obj = {}
     obj['keyDoesntExist']
 
-# LOG_WARNING ?
+# logging integration
 @app.route('/warn', methods=['GET'])
 def warn():
     return 'Success'
 
-# LOG_ERROR ?
 @app.route('/error', methods=['GET'])
 def error():
     return 'Success'
 
+# other
 # @app.errorhandler(500)
 # def internal_error(error):
 #     return "500 error"
