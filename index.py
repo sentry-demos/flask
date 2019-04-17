@@ -71,9 +71,3 @@ def unhandled_exception():
     obj = {}
     obj['keyDoesntExist']
 
-# optional
-# Register handlers by decorating a function with errorhandler() http://flask.pocoo.org/docs/1.0/errorhandling/
-# @app.errorhandler(500)
-# def internal_error(error):
-#     return "500 error"
-#     return "500 error", 500
