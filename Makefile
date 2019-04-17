@@ -3,14 +3,12 @@
 
 #SENTRY_AUTH_TOKEN=<your_auth_token>
 SENTRY_ORG=testorg-az
-SENTRY_PROJECT=will-frontend-react
+SENTRY_PROJECT=flask
 VERSION=`sentry-cli releases propose-version`
 
-#echo $(VERSION)
+# echo $(SENTRY_AUTH_TOKEN)
 
-deploy: setup_release run_flask
-
-setup_release: create_release associate_commits
+deploy: create_release associate_commits run_flask
 
 create_release:
 	sentry-cli releases -o $(SENTRY_ORG) new -p $(SENTRY_PROJECT) $(VERSION)
