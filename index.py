@@ -3,10 +3,10 @@ from flask_cors import CORS
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import configure_scope, capture_exception
-import pdb # pdb.set_trace()
+import pdb # set_trace()
 import os
 
-VERSION = os.environ.get("VERSION", default=False)
+VERSION = os.environ.get("VERSION")
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
@@ -26,11 +26,10 @@ Inventory = {
 @app.route('/checkout', methods=['POST'])
 def checkout():
     
-    # body
-    dictionary = json.loads(request.data)
+    body = json.loads(request.data)
 
-    # make this modular/middleware
-    email = dictionary["email"]
+    # Event Context - make into Flask middleware
+    email = body["email"]
     transactionId = request.headers.get('X-Transaction-ID')
     sessionId = request.headers.get('X-Session-ID')
     with configure_scope() as scope:
@@ -38,8 +37,8 @@ def checkout():
         scope.set_tag("transaction-id", transactionId)
         scope.set_tag("session-id", sessionId)
 
-    # checkout
-    cart = dictionary["cart"]
+    # Checkout
+    cart = body["cart"]
     global Inventory
     tempInventory = Inventory
     for item in cart:
@@ -60,11 +59,8 @@ def checkout():
 @app.route('/handled', methods=['GET'])
 def handled_exception():
     try:
-        # '2' + 2 # TypeError
-
-        x = 1 / 0 # ZeroDivisionError
-        # print "Code works, no error. Suspect Commit testing"
-    except ZeroDivisionError as err:
+        '2' + 2
+    except TypeError as err:
         capture_exception(err)
         abort(500)
 
@@ -75,16 +71,8 @@ def unhandled_exception():
     obj = {}
     obj['keyDoesntExist']
 
-# logging integration
-@app.route('/warn', methods=['GET'])
-def warn():
-    return 'Success'
-
-@app.route('/error', methods=['GET'])
-def error():
-    return 'Success'
-
-# other
+# optional
+# Register handlers by decorating a function with errorhandler() http://flask.pocoo.org/docs/1.0/errorhandling/
 # @app.errorhandler(500)
 # def internal_error(error):
 #     return "500 error"
