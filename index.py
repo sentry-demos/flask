@@ -1,8 +1,9 @@
-from flask import Flask, request, g, json
+from flask import Flask, request, g, json, abort
 from flask_cors import CORS
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
-from sentry_sdk import configure_scope
+from sentry_sdk import configure_scope, capture_exception
+import pdb # pdb.set_trace()
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
@@ -18,8 +19,6 @@ Inventory = {
 }
 
 
-# import pdb; pdb.set_trace()
-# TODO equivalent of try-catch block so can return 500 response detail - graceful error handling
 @app.route('/checkout', methods=['POST'])
 def checkout():
     
@@ -57,9 +56,12 @@ def checkout():
 @app.route('/handled', methods=['GET'])
 def handled_exception():
     try:
-        #thing
-    except TheError:
-        
+        '2' + 2
+        print "blah"
+    except TypeError as err:
+        capture_exception(err)
+        abort(500)
+
     return 'Success'
 
 @app.route('/unhandled', methods=['GET'])
@@ -76,3 +78,8 @@ def warn():
 @app.route('/error', methods=['GET'])
 def error():
     return 'Success'
+
+# @app.errorhandler(500)
+# def internal_error(error):
+#     return "500 error"
+#     return "500 error", 500
