@@ -57,11 +57,10 @@ def checkout():
 def handled_exception():
     try:
         '2' + 2
-        print "blah"
     except TypeError as err:
         capture_exception(err)
         abort(500)
-
+        
     return 'Success'
 
 @app.route('/unhandled', methods=['GET'])

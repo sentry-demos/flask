@@ -9,7 +9,7 @@ VERSION=`sentry-cli releases propose-version`
 # echo $(SENTRY_AUTH_TOKEN)
 # echo $(VERSION)
 
-deploy: create_release run_flask
+deploy: create_release associate_commits run_flask
 
 create_release:
 	sentry-cli releases -o $(SENTRY_ORG) new -p $(SENTRY_PROJECT) $(VERSION)
