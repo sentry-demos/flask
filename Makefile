@@ -19,4 +19,4 @@ associate_commits:
 	sentry-cli releases -o $(SENTRY_ORG) -p $(SENTRY_PROJECT) set-commits --auto $(VERSION)
 
 run_flask:
-	flask run -p 3001
+	VERSION=$(VERSION) flask run -p 3001

@@ -4,9 +4,13 @@ import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import configure_scope, capture_exception
 import pdb # pdb.set_trace()
+import os
+
+VERSION = os.environ.get("VERSION", default=False)
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
+    release=VERSION,
     integrations=[FlaskIntegration()]
 )
 app = Flask(__name__)
