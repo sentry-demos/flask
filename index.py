@@ -57,7 +57,8 @@ def checkout():
 def handled_exception():
     try:
         # '2' + 2
-        x = 1 / 0
+        # x = 1 / 0
+        print "Code works, no error. Suspect Commit testing"
     except ZeroDivisionError as err:
         capture_exception(err)
         abort(500)
