@@ -56,9 +56,10 @@ def checkout():
 @app.route('/handled', methods=['GET'])
 def handled_exception():
     try:
-        # '2' + 2
-        # x = 1 / 0
-        print "Code works, no error. Suspect Commit testing"
+        # '2' + 2 # TypeError
+
+        x = 1 / 0 # ZeroDivisionError
+        # print "Code works, no error. Suspect Commit testing"
     except ZeroDivisionError as err:
         capture_exception(err)
         abort(500)
