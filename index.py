@@ -56,11 +56,12 @@ def checkout():
 @app.route('/handled', methods=['GET'])
 def handled_exception():
     try:
-        '2' + 2
-    except TypeError as err:
+        # '2' + 2
+        x = 1 / 0
+    except ZeroDivisionError as err:
         capture_exception(err)
         abort(500)
-        
+
     return 'Success'
 
 @app.route('/unhandled', methods=['GET'])
