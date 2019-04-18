@@ -1,17 +1,34 @@
+import os
 from flask import Flask, request, g, json, abort
 from flask_cors import CORS
+
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import configure_scope, capture_exception
-import os
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
-    release=os.environ.get("VERSION"),
-    integrations=[FlaskIntegration()]
+    integrations=[FlaskIntegration()],
+    release=os.environ.get("VERSION")
 )
+
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/handled', methods=['GET'])
+def handled_exception():
+    try:
+        '2' + 2
+    except Exception as err:
+        sentry_sdk.capture_exception(err)
+        abort(500)
+
+    return 'Success'
+
+@app.route('/unhandled', methods=['GET'])
+def unhandled_exception():
+    obj = {}
+    obj['keyDoesntExist']
 
 Inventory = {
     'wrench': 1,
@@ -57,19 +74,3 @@ def checkout():
     process_order(cart)
 
     return 'Success'
-
-@app.route('/handled', methods=['GET'])
-def handled_exception():
-    try:
-        '2' + 2
-    except Exception as err:
-        capture_exception(err)
-        abort(500)
-
-    return 'Success'
-
-@app.route('/unhandled', methods=['GET'])
-def unhandled_exception():
-    obj = {}
-    obj['keyDoesntExist']
-
