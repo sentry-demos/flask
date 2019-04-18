@@ -6,11 +6,9 @@ from sentry_sdk import configure_scope, capture_exception
 import pdb # set_trace()
 import os
 
-VERSION = os.environ.get("VERSION")
-
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
-    release=VERSION,
+    release=os.environ.get("VERSION"),
     integrations=[FlaskIntegration()]
 )
 app = Flask(__name__)
@@ -60,7 +58,7 @@ def checkout():
 def handled_exception():
     try:
         '2' + 2
-    except TypeError as err:
+    except Exception as err:
         capture_exception(err)
         abort(500)
 
