@@ -3,7 +3,6 @@ from flask_cors import CORS
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk import configure_scope, capture_exception
-import pdb # set_trace()
 import os
 
 sentry_sdk.init(
@@ -20,39 +19,44 @@ Inventory = {
     'hammer': 1
 }
 
-
-@app.route('/checkout', methods=['POST'])
-def checkout():
-    
-    body = json.loads(request.data)
-
-    # Event Context - make into Flask middleware
-    email = body["email"]
-    transactionId = request.headers.get('X-Transaction-ID')
-    sessionId = request.headers.get('X-Session-ID')
-    with configure_scope() as scope:
-        scope.user = { "email" : email }
-        scope.set_tag("transaction-id", transactionId)
-        scope.set_tag("session-id", sessionId)
-
-    # Checkout
-    cart = body["cart"]
+def process_order(cart):
     global Inventory
     tempInventory = Inventory
     for item in cart:
         if Inventory[item['id']] <= 0:
-            with configure_scope() as scope:
-                scope.set_extra("inventory", tempInventory)
             raise Exception("Not enough inventory for " + item['id'])
         else:
             tempInventory[item['id']] -= 1
-            response = 'Success purchased ' + item['id'] + ' the updated remaining stock is ' + str(tempInventory[item['id']])
-    
+            print 'Success: ' + item['id'] + ' was purchased, remaining stock is ' + str(tempInventory[item['id']])
     Inventory = tempInventory 
 
-    return response
+@app.before_request
+def sentry_event_context():
 
+    if (request.data):
+        order = json.loads(request.data)
+        with configure_scope() as scope:
+                scope.user = { "email" : order["email"] }
+        
+    transactionId = request.headers.get('X-Transaction-ID')
+    sessionId = request.headers.get('X-Session-ID')
+    global Inventory
 
+    with configure_scope() as scope:
+        scope.set_tag("transaction-id", transactionId)
+        scope.set_tag("session-id", sessionId)
+        scope.set_extra("inventory", Inventory)
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+
+    order = json.loads(request.data)
+    print "Processing order for: " + order["email"]
+    cart = order["cart"]
+    
+    process_order(cart)
+
+    return 'Success'
 
 @app.route('/handled', methods=['GET'])
 def handled_exception():
