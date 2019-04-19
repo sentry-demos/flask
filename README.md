@@ -8,9 +8,9 @@ To show how Sentry works in an example web app that uses Flask
 - Sentry Release cycle covered in `Makefile`
 
 ## Initial Setup & Run
-1. setup flask
+1.
 ```
-pip install flask sentry_sdk flask-cors
+pip install -r ./requirements.txt
 ```
 1. Configure Sentry with your `DSN key` in app.py
 2. Configure sentry-cli (is for creating Sentry releases) with your `SENTRY_AUTH_TOKEN` in Makefile or run `export SENTRY_AUTH_TOKEN=<your_auth_token>`. Do the same for `SENTRY_ORG` and `SENTRY_PROJECT`

@@ -1,10 +1,9 @@
 import os
-from flask import Flask, request, g, json, abort
+from flask import Flask, request, json, abort
 from flask_cors import CORS
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
-from sentry_sdk import configure_scope, capture_exception
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
@@ -52,14 +51,14 @@ def sentry_event_context():
 
     if (request.data):
         order = json.loads(request.data)
-        with configure_scope() as scope:
+        with sentry_sdk.configure_scope() as scope:
                 scope.user = { "email" : order["email"] }
         
     transactionId = request.headers.get('X-Transaction-ID')
     sessionId = request.headers.get('X-Session-ID')
     global Inventory
 
-    with configure_scope() as scope:
+    with sentry_sdk.configure_scope() as scope:
         scope.set_tag("transaction-id", transactionId)
         scope.set_tag("session-id", sessionId)
         scope.set_extra("inventory", Inventory)
