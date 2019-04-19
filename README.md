@@ -21,4 +21,4 @@ make deploy
 ```
 
 ## GIF
-![Alt Text](sentry-demos-flask.gif)
+![Alt Text](flask-demo.gif)
