@@ -59,8 +59,8 @@ def sentry_event_context():
     global Inventory
 
     with sentry_sdk.configure_scope() as scope:
-        scope.set_tag("transaction-id", transactionId)
-        scope.set_tag("session-id", sessionId)
+        scope.set_tag("transaction_id", transactionId)
+        scope.set_tag("session_id", sessionId)
         scope.set_extra("inventory", Inventory)
 
 @app.route('/checkout', methods=['POST'])
