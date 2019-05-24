@@ -33,6 +33,5 @@ Create a virtualenv for your Sentry Flask project
 ```bash
 virtualenv $HOME/my_virtualenvs/sentry_flask
 source $HOME/my_virtualenvs/sentry_flask/bin/activate
-pip install sentry_sdk==0.7.13
-pip freeze...?
+pip install -r ./requirements.txt
 ```
