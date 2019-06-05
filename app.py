@@ -46,19 +46,21 @@ def process_order(cart):
             print 'Success: ' + item['id'] + ' was purchased, remaining stock is ' + str(tempInventory[item['id']])
     Inventory = tempInventory 
 
-# trace Id (transaction) is set by sentry_sdk as of version 0.7.13
 @app.before_request
 def sentry_event_context():
+
     if (request.data):
         order = json.loads(request.data)
         with sentry_sdk.configure_scope() as scope:
                 scope.user = { "email" : order["email"] }
         
+    transactionId = request.headers.get('X-Transaction-ID')
     sessionId = request.headers.get('X-Session-ID')
     global Inventory
 
     with sentry_sdk.configure_scope() as scope:
-        scope.set_tag("session_id", sessionId)
+        scope.set_tag("transaction-id", transactionId)
+        scope.set_tag("session-id", sessionId)
         scope.set_extra("inventory", Inventory)
 
 @app.route('/checkout', methods=['POST'])
