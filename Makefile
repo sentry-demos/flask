@@ -5,6 +5,7 @@
 SENTRY_ORG=testorg-az
 SENTRY_PROJECT=flask
 VERSION=`sentry-cli releases propose-version`
+export FLASK_ENV=development
 
 deploy: create_release associate_commits run_flask
 
