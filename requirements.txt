@@ -1,3 +1,4 @@
 flask==1.0.2
 sentry_sdk==0.7.10
 flask-cors==3.0.7
+blinker==1.4
