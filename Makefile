@@ -3,8 +3,6 @@
 
 #SENTRY_AUTH_TOKEN=<your_auth_token>
 
-export FLASK_ENV=development
-
 SENTRY_ORG=testorg-az
 SENTRY_PROJECT=flask
 VERSION=`sentry-cli releases propose-version`
@@ -19,4 +17,4 @@ associate_commits:
 	sentry-cli releases -o $(SENTRY_ORG) -p $(SENTRY_PROJECT) set-commits --auto $(VERSION)
 
 run_flask:
-	VERSION=$(VERSION) FLASK_APP=app.py flask run -p 3001
+	VERSION=$(VERSION) FLASK_APP=app.py FLASK_ENV=development flask run -p 3001
