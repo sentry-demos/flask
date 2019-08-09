@@ -1,1 +1,1 @@
-web: echo $PORT && gunicorn app:app
+web: -b 0.0.0.0:8000 gunicorn app:app
