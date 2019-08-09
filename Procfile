@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: echo $PORT && gunicorn app:app
