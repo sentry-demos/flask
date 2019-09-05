@@ -20,16 +20,3 @@ make deploy
 ## GIF
 based on 0.7.10
 ![Alt Text](flask-demo.gif)
-
-## Changelog
-**05/24/19**
-The branch `tracing-integration` features a Sentry Tracing integration, using Sentry SDK 0.7.13
-- It sets trace id by default, so you'll see the code for `scope.set_tag("transaction-id", transactionId)` is gone, no longer needed
-
-## Optional
-Create a virtualenv for your Sentry Flask project so you're accessing SDK ^0.7.13
-```bash
-virtualenv $HOME/my_virtualenvs/flask_tracing_sdk
-source $HOME/my_virtualenvs/flask_tracing_sdk/bin/activate
-pip install -r ./requirements.txt
-```
