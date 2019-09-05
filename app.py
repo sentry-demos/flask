@@ -64,7 +64,6 @@ def sentry_event_context():
         scope.set_extra("inventory", Inventory)
 
 @app.route('/checkout', methods=['POST'])
-@cross_origin()
 def checkout():
 
     order = json.loads(request.data)
