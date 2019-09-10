@@ -10,9 +10,9 @@ To show how Sentry works in an example web app that uses Flask
 ## Initial Setup & Run
 1. `pip install -r ./requirements.txt`
 2. Configure Sentry with your `DSN key` in app.py
-3. Configure sentry-cli (is for creating Sentry releases) with your `SENTRY_AUTH_TOKEN` in Makefile or run `export SENTRY_AUTH_TOKEN=<your_auth_token>`. Do the same for `SENTRY_ORG` and `SENTRY_PROJECT`
+3. Configure sentry-cli (is for creating Sentry releases) with your `SENTRY_AUTH_TOKEN` in Makefile or set as environment variable. Do the same for `SENTRY_ORG` and `SENTRY_PROJECT`
 4. Check your Github repo is integrated into your Sentry organization.
-5. run make, which (Makefile) creates a Sentry release and runs Flask
+5. run `make`, which will use `sentry-cli` to create Sentry release and associatae commits, and run the Flask application
 ```
 make deploy
 ```
