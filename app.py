@@ -7,8 +7,10 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 
 sentry_sdk.init(
     dsn="https://2ba68720d38e42079b243c9c5774e05c@sentry.io/1316515",
+    traces_sample_rate=1.0,
     integrations=[FlaskIntegration()],
-    release=os.environ.get("VERSION")
+    release=os.environ.get("VERSION"),
+    environment="prod"
 )
 
 app = Flask(__name__)
@@ -26,8 +28,13 @@ def handled_exception():
 
 @app.route('/unhandled', methods=['GET'])
 def unhandled_exception():
+    print('\n *** UNHANDLED ***')
+    with sentry_sdk.start_span(op="http", description="GET /unhandled") as span:
+        span.set_tag("http.status_code", "200")
+        span.set_data("http.foobarsessionid", "123456")
+    span.finish()
     obj = {}
-    obj['keyDoesntExist']
+    obj['keyDoesntExist1']
 
 Inventory = {
     'wrench': 1,
@@ -65,6 +72,12 @@ def sentry_event_context():
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
+    print('1111111\n')
+    with sentry_sdk.start_span(op="http", description="POST /checkout") as span:
+        span.set_tag("http.status_code", 200)
+        span.set_data("http.foobarsessionid", 987654)
+        span.finish()
+    print('2222222\n')
 
     order = json.loads(request.data)
     print "Processing order for: " + order["email"]
