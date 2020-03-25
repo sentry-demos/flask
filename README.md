@@ -17,5 +17,10 @@ To show how Sentry works in an example web app that uses Flask
 make deploy
 ```
 
+## Deploy to GCP Cloud Run
+```
+make deploy_gcp
+```
+
 ## GIF
 ![Alt Text](flask-demo.gif)

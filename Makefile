@@ -9,7 +9,7 @@ VERSION=`sentry-cli releases propose-version`
 
 REPOSITORY=us.gcr.io/sales-engineering-sf
 COMMIT_SHA=$(shell git rev-parse HEAD)
-GCP_DEPLOY=gcloud run deploy $(shell whoami)
+WHOAMI=$(shell whoami)
 GCP_SERVICE_NAME=flask-errors
 GCP_WORKSPACE_NAME=workspace_flask_errors
 
@@ -27,13 +27,13 @@ run_flask:
 	VERSION=$(VERSION) FLASK_APP=app.py flask run -p 3001
 
 # GCP
-deploy_to_gcp: build deploy-flask
+deploy_gcp: build_image deploy_service
 
-build:
+build_image:
 	gcloud builds submit --substitutions=COMMIT_SHA=$(COMMIT_SHA) --config=cloudbuild.yaml
 
-deploy-flask:
-	$(GCP_DEPLOY)-$(GCP_SERVICE_NAME) --image $(REPOSITORY)/$(GCP_WORKSPACE_NAME):$(COMMIT_SHA) --platform managed
+deploy_service:
+	gcloud run deploy $(WHOAMI)-$(GCP_SERVICE_NAME) --image $(REPOSITORY)/$(GCP_WORKSPACE_NAME):$(COMMIT_SHA) --platform managed
 # ---
 
 .PHONY: deploy create_release associate_commits run_flask deploy_to_gcp build flask
