@@ -44,7 +44,7 @@ def process_order(cart):
         else:
             tempInventory[item['id']] -= 1
             print 'Success: ' + item['id'] + ' was purchased, remaining stock is ' + str(tempInventory[item['id']])
-    Inventory = tempInventory 
+    Inventory = tempInventory
 
 @app.before_request
 def sentry_event_context():
@@ -52,8 +52,9 @@ def sentry_event_context():
     if (request.data):
         order = json.loads(request.data)
         with sentry_sdk.configure_scope() as scope:
-                scope.user = { "email" : order["email"] }
-        
+                scope.user = { "email" : order.get("email") }
+                scope.set_tag("customerType", order.get("customerType"))
+
     transactionId = request.headers.get('X-Transaction-ID')
     sessionId = request.headers.get('X-Session-ID')
     global Inventory
@@ -69,7 +70,7 @@ def checkout():
     order = json.loads(request.data)
     print "Processing order for: " + order["email"]
     cart = order["cart"]
-    
+
     process_order(cart)
 
     return 'Success'
